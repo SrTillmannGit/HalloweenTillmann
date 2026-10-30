@@ -214,6 +214,8 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
 @keyframes pulsa{0%,100%{opacity:1}14%{opacity:.4}28%{opacity:1}}
 
 .rodape{position:relative;z-index:2;text-align:center;font:.75rem/1.4 var(--f-ficha);color:#5b524e;margin-top:60px}
+.rodape p{margin:0 0 .6em}
+.rodape .credito{font:.7rem/1.5 var(--f-texto);letter-spacing:.04em;color:#7a706a;text-wrap:balance}
 
 @media (prefers-reduced-motion:reduce){*,body::after{animation:none!important;transition:none!important}}
 </style>
@@ -320,7 +322,10 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
   </ul>
 </section>
 
-<p class="rodape">Caso nº 0001 · Se ele aparecer nos seus sonhos, não abra os olhos.</p>
+<footer class="rodape">
+  <p>Caso nº 0001 · Se ele aparecer nos seus sonhos, não abra os olhos.</p>
+  <p class="credito">Desenvolvimento por Brayan Tillmann - © Copyright 2026 - Todos os direitos reservados</p>
+</footer>
 
 <div class="tela" id="tela" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
   <button class="fechar" type="button" id="fecharTela">Fechar</button>
