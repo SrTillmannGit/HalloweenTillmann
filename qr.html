@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>QR do Cartaz</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Lato:wght@400;700&display=swap">
+<style>
+:root{--papel:#eeeeeb;--tinta:#151514;--suave:#66665f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--papel);color:var(--tinta);font:16px/1.5 "Lato",system-ui,sans-serif;padding:32px max(16px,4vw)}
+main{max-width:520px;margin:0 auto;display:grid;gap:18px;justify-items:center;text-align:center}
+h1{font:400 2.4rem/1 "Pirata One",Georgia,serif;margin:0}
+label{display:grid;gap:6px;width:100%;text-align:left;font-weight:700;font-size:.85rem}
+input{width:100%;padding:.7em;border:2px solid var(--tinta);font:1rem "Lato",sans-serif;background:#fff}
+#qr{background:#fff;padding:18px}
+#qr img,#qr canvas{display:block;width:100%;max-width:320px;height:auto}
+p{color:var(--suave);margin:0;font-size:.9rem}
+button{padding:.8em 1.4em;background:var(--tinta);color:var(--papel);border:0;font:700 .9rem "Lato",sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+</style>
+</head>
+<body>
+<main>
+  <h1>QR do cartaz</h1>
+  <label for="url">Endereço do site publicado
+    <input id="url" type="url" placeholder="https://seu-site.netlify.app">
+  </label>
+  <div id="qr"></div>
+  <button id="baixar" type="button">Baixar PNG</button>
+  <p>Cole o endereço final, baixe o PNG e coloque no espaço em branco no rodapé do cartaz. Teste escaneando com o celular antes de imprimir.</p>
+</main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+const alvo = document.getElementById("qr"), campo = document.getElementById("url");
+campo.value = location.protocol.startsWith("http") && !/localhost|127\.0\.0\.1/.test(location.host)
+  ? location.href.replace(/qr\.html.*$/, "") : "";
+function gerar() {
+  alvo.replaceChildren();
+  new QRCode(alvo, { text: campo.value.trim() || "https://exemplo.com", width: 1024, height: 1024, correctLevel: QRCode.CorrectLevel.H });
+}
+campo.addEventListener("input", gerar);
+document.getElementById("baixar").addEventListener("click", () => {
+  const c = alvo.querySelector("canvas"); if (!c) return;
+  const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = "qrcode-este-homem.png"; a.click();
+});
+gerar();
+</script>
+</body>
+</html>

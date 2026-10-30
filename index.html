@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Avistou Alguma Anomalia?</title>
+<meta name="description" content="Avistou alguma anomalia, assombração ou monstruosidade? Tire uma foto e registre o avistamento.">
+<meta property="og:title" content="Avistou alguma anomalia, assombração ou monstruosidade?">
+<meta property="og:image" content="rosto.jpg">
+<meta name="theme-color" content="#050404">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Lato:wght@400;700;900&family=Special+Elite&display=swap">
+<style>
+/* Layout: um cartaz sujo pregado num muro escuro sob uma lâmpada falhando; abaixo, o mural de avistamentos como fotos pregadas. */
+:root{
+  --muro:#050404;
+  --papel:#9a9588;
+  --papel-claro:#c2beb1;
+  --papel-sombra:#6e6a60;
+  --tinta:#0b0a09;
+  --tinta-suave:#3b3833;
+  --sangue:#7d0a07;
+  --sangue-vivo:#b3140d;
+  --fantasma:#8f8a80;
+  --f-titulo:"Pirata One","UnifrakturCook",Georgia,serif;
+  --f-texto:"Lato",system-ui,sans-serif;
+  --f-ficha:"Special Elite","Courier New",monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{background:var(--muro)}
+body{margin:0;color:var(--tinta);font:16px/1.55 var(--f-texto);
+  background:
+    radial-gradient(ellipse 70% 45% at 50% 0%,rgba(110,8,4,.28),transparent 70%),
+    radial-gradient(ellipse 120% 60% at 50% 100%,rgba(60,0,0,.35),transparent 70%),
+    var(--muro);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-block:max(28px,env(safe-area-inset-top,0px)) max(40px,env(safe-area-inset-bottom,0px));
+  overflow-x:hidden;min-height:100vh}
+/* granulação de filme velho */
+body::after{content:"";position:fixed;inset:-50%;pointer-events:none;z-index:40;opacity:.12;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:grao .5s steps(3) infinite}
+@keyframes grao{0%{transform:translate(0,0)}33%{transform:translate(-3%,2%)}66%{transform:translate(2%,-3%)}}
+/* névoa vermelha no rodapé da tela */
+body::before{content:"";position:fixed;left:0;right:0;bottom:0;height:35vh;pointer-events:none;z-index:1;
+  background:linear-gradient(to top,rgba(40,0,0,.55),transparent);animation:nevoa 9s ease-in-out infinite alternate}
+@keyframes nevoa{to{opacity:.45}}
+img{max-width:100%;display:block}
+[hidden]{display:none!important}
+button,input,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--sangue-vivo);outline-offset:3px}
+
+/* ---------- papel ---------- */
+.papel{position:relative;z-index:2;max-width:620px;margin:0 auto;background:var(--papel);
+  background-image:
+    radial-gradient(circle at 82% 12%,rgba(70,40,20,.28),transparent 14%),
+    radial-gradient(circle at 12% 78%,rgba(70,40,20,.22),transparent 18%),
+    radial-gradient(ellipse at 20% 15%,rgba(255,255,255,.1),transparent 40%),
+    radial-gradient(ellipse at 80% 70%,rgba(0,0,0,.18),transparent 45%),
+    linear-gradient(115deg,transparent 48%,rgba(0,0,0,.09) 49%,transparent 52%),
+    linear-gradient(25deg,transparent 30%,rgba(0,0,0,.08) 31%,transparent 35%),
+    linear-gradient(160deg,transparent 60%,rgba(255,255,255,.08) 61%,transparent 64%);
+  padding:clamp(72px,16vw,96px) clamp(20px,6vw,52px) clamp(28px,7vw,56px);
+  clip-path:polygon(1% 0,24% 1%,51% 0,77% 1.2%,100% 0,99.2% 22%,100% 48%,99% 74%,100% 100%,72% 99%,47% 100%,22% 99.2%,0 100%,.8% 76%,0 50%,1% 25%);
+  animation:lampada 11s infinite}
+.papel::after{content:"";position:absolute;inset:0;pointer-events:none;
+  box-shadow:inset 0 0 90px 10px rgba(0,0,0,.75)}
+@keyframes lampada{
+  0%,100%{filter:brightness(1)}
+  41%{filter:brightness(1)} 42%{filter:brightness(.35)} 43%{filter:brightness(.95)} 44%{filter:brightness(.2)} 46%{filter:brightness(1)}
+  77%{filter:brightness(1)} 78%{filter:brightness(.5)} 79.5%{filter:brightness(1)}}
+.sangue-topo{position:absolute;top:0;left:0;width:100%;height:110px;pointer-events:none}
+
+/* ---------- cartaz ---------- */
+.cartaz{text-align:center;position:relative}
+.cartaz h1{font:400 clamp(2rem,8.6vw,3.4rem)/1 var(--f-titulo);margin:0 0 .4em;letter-spacing:.02em;text-wrap:balance;
+  text-shadow:0 0 1px var(--tinta),3px 2px 0 rgba(125,10,7,.35);animation:glitch 6s infinite}
+@keyframes glitch{0%,92%,100%{transform:none;text-shadow:0 0 1px var(--tinta),3px 2px 0 rgba(125,10,7,.35)}
+  93%{transform:translate(-2px,1px) skewX(-4deg);text-shadow:-5px 0 0 rgba(179,20,13,.7),5px 0 0 rgba(0,0,0,.5)}
+  94%{transform:translate(2px,-1px)} 95%{transform:none}}
+.rosto-wrap{position:relative;width:min(78%,340px);margin:0 auto}
+.rosto-anim{position:relative;mix-blend-mode:multiply;animation:respira 7s ease-in-out infinite}
+.rosto-wrap.piscou .rosto-anim{animation:tremor .18s steps(2) 3}
+.rosto{filter:grayscale(1) contrast(1.5) brightness(.68) sepia(.35);
+  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%)}
+.olhos{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.rosto-wrap{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.palpebra{transition:transform .07s ease-in}
+.olhos.piscando .palpebra{transform:translateY(50px)}
+#boca{transform-origin:270px 596px;transform:scaleY(0);transition:transform .14s ease-in}
+.rosto-wrap.boca-aberta #boca{transform:scaleY(1);transition:transform .28s cubic-bezier(.3,1.7,.5,1)}
+#boca .gota{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0)}
+.rosto-wrap.boca-aberta #boca .gota{animation:escorre 1.6s cubic-bezier(.5,0,.8,.6) var(--d,0s) both}
+@keyframes escorre{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes respira{50%{transform:scale(1.015)}}
+@keyframes tremor{0%{transform:translate(2px,-1px)}50%{transform:translate(-3px,1px) scale(1.02)}100%{transform:none}}
+.contador{font:1rem/1.3 var(--f-ficha);margin:1.6em auto 0;max-width:30ch}
+.contador b{display:block;font:400 clamp(2.6rem,12vw,3.6rem)/1 var(--f-titulo);color:var(--sangue);font-variant-numeric:tabular-nums;
+  text-shadow:0 0 12px rgba(179,20,13,.35)}
+.linha{border:0;border-top:1px solid var(--tinta-suave);margin:1.8em 0 1.2em;opacity:.7}
+.chamado{font-size:.98rem;max-width:44ch;margin:0 auto;color:#1c1a17}
+.cta{display:inline-flex;align-items:center;gap:.6em;margin-top:1.4em;padding:.95em 1.6em;
+  background:var(--sangue);color:#e8dcd5;border:0;cursor:pointer;
+  font:900 1rem/1 var(--f-texto);letter-spacing:.14em;text-transform:uppercase;
+  clip-path:polygon(2% 6%,98% 0,100% 92%,0 100%);transition:transform .15s,background .15s;
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.35)}
+.cta:hover{transform:rotate(-1deg) scale(1.03);background:var(--sangue-vivo)}
+.cta:active{transform:scale(.96)}
+.cta svg{width:22px;height:22px;fill:currentColor}
+
+/* ---------- formulário ---------- */
+.ficha{margin-top:2.2em;position:relative}
+.ficha h2,.mural h2{font:400 2rem/1 var(--f-titulo);margin:0 0 .2em;text-align:center}
+.sub{font:.9rem/1.4 var(--f-ficha);text-align:center;color:var(--tinta-suave);margin:0 0 1.4em}
+.foto-alvo{position:relative;display:grid;place-items:center;aspect-ratio:4/3;max-width:100%;
+  border:2px dashed var(--tinta-suave);background:rgba(0,0,0,.12);cursor:pointer;overflow:hidden;text-align:center}
+.foto-alvo span{font:1rem/1.3 var(--f-ficha);padding:1em}
+.foto-alvo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.foto-alvo input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.campos{display:grid;gap:14px;margin-top:16px}
+.campos-dupla{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:440px){.campos-dupla{grid-template-columns:1fr}}
+label{display:grid;gap:4px;font:.78rem/1 var(--f-texto);font-weight:900;letter-spacing:.14em;text-transform:uppercase;min-width:0}
+input[type=text],textarea{width:100%;min-width:0;padding:.7em .8em;background:rgba(0,0,0,.06);border:0;border-bottom:2px solid var(--tinta);
+  font:1rem/1.4 var(--f-ficha);text-transform:none;letter-spacing:0;border-radius:0}
+textarea{resize:vertical;min-height:4.5em}
+input::placeholder,textarea::placeholder{color:#4f4b44}
+.enviar{width:100%;justify-content:center;margin-top:18px}
+.enviar[disabled]{opacity:.5;cursor:wait}
+.aviso{font:.9rem/1.4 var(--f-ficha);text-align:center;min-height:1.4em;margin:.8em 0 0}
+.aviso.erro{color:var(--sangue)}
+.modo-teste{font:.78rem/1.4 var(--f-texto);background:var(--tinta);color:var(--papel-claro);padding:.6em .9em;margin:0 0 1.4em;text-align:center}
+
+/* ---------- mural ---------- */
+.mural{position:relative;z-index:2;max-width:1100px;margin:56px auto 0;color:var(--papel-claro)}
+.mural h2{color:var(--papel-claro);text-shadow:0 0 18px rgba(179,20,13,.5)}
+.mural .sub{color:var(--fantasma)}
+.mural-acoes{display:flex;justify-content:center;gap:10px;margin-bottom:28px;flex-wrap:wrap}
+.btn-escuro{background:#1a1716;color:var(--papel-claro);box-shadow:inset 0 0 0 1px #3a3330}
+.btn-escuro:hover{background:#2a2220}
+.grade{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,230px),1fr));gap:34px 26px;padding:0;margin:0;list-style:none}
+.polaroid{background:var(--papel);color:var(--tinta);padding:10px 10px 14px;box-shadow:0 10px 28px rgba(0,0,0,.85);
+  transform:rotate(var(--rot,0deg));transition:transform .2s;position:relative;min-width:0}
+.polaroid:hover{transform:rotate(0) scale(1.03);z-index:2}
+.polaroid::before{content:"";position:absolute;top:-9px;left:50%;width:14px;height:14px;margin-left:-7px;border-radius:50%;
+  background:radial-gradient(circle at 35% 35%,#d64a3c,var(--sangue) 60%,#3d0a06);box-shadow:0 3px 4px rgba(0,0,0,.6)}
+.polaroid img{width:100%;aspect-ratio:1;object-fit:cover;filter:grayscale(1) contrast(1.35) brightness(.85);background:var(--papel-sombra);cursor:zoom-in}
+.polaroid .num{font:.72rem/1 var(--f-texto);font-weight:900;letter-spacing:.16em;text-transform:uppercase;margin-top:10px;display:flex;justify-content:space-between;gap:8px;color:var(--sangue)}
+.polaroid .num time{color:var(--tinta-suave);font-variant-numeric:tabular-nums}
+.polaroid p{margin:.4em 0 0;font:.95rem/1.35 var(--f-ficha);overflow-wrap:anywhere}
+.polaroid .quem{font-size:.8rem;color:var(--tinta-suave)}
+.vazio{grid-column:1/-1;text-align:center;font:1rem/1.5 var(--f-ficha);color:var(--fantasma);padding:30px 0}
+.vazio img{width:90px;margin:0 auto 12px;opacity:.25;filter:invert(1);mix-blend-mode:screen}
+
+/* ---------- telão / zoom ---------- */
+.tela{position:fixed;inset:0;z-index:50;background:#000;color:var(--papel-claro);display:grid;place-items:center;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+.tela figure{margin:0;display:grid;justify-items:center;gap:14px;max-width:min(92vw,900px)}
+.tela img{max-height:78vh;max-width:100%;object-fit:contain;filter:grayscale(1) contrast(1.3)}
+.tela figcaption{font:1.1rem/1.4 var(--f-ficha);text-align:center}
+.tela figcaption b{font:400 1.8rem/1 var(--f-titulo);display:block;color:var(--sangue-vivo)}
+.tela .fechar{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));right:calc(14px + env(safe-area-inset-right,0px));
+  background:none;border:1px solid #555;color:var(--papel-claro);padding:.5em .9em;cursor:pointer;font:.8rem var(--f-texto);letter-spacing:.1em;text-transform:uppercase}
+.tela.entra figure{animation:entra .6s ease-out}
+@keyframes entra{0%{opacity:0;filter:blur(6px)}100%{opacity:1}}
+
+/* ---------- susto ---------- */
+.susto{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center;overflow:hidden}
+.susto canvas{position:absolute;left:50%;top:50%;translate:-50% -50%;height:min(118vh,160vw);width:auto;max-width:none;animation:avanca 1.7s cubic-bezier(.2,1.6,.4,1) forwards}
+.susto::after{content:"";position:absolute;inset:0;background:var(--sangue-vivo);mix-blend-mode:multiply;animation:clarao 1.7s steps(1) forwards}
+@keyframes avanca{
+  0%{transform:scale(.35);filter:brightness(3)}
+  8%{transform:scale(1.05) translate(-2%,1%)}
+  12%{transform:scale(1.1) translate(2%,-1%)} 16%{transform:scale(1.08) translate(-1%,-2%)} 20%{transform:scale(1.12) translate(1%,2%)}
+  24%{transform:scale(1.1)} 60%{transform:scale(1.16) translate(-1%,0)} 64%{transform:scale(1.14) translate(1%,1%)}
+  100%{transform:scale(1.25);filter:brightness(1)}}
+@keyframes clarao{0%{opacity:.9}6%{opacity:0}14%{opacity:.6}18%{opacity:0}62%{opacity:.5}66%{opacity:0}}
+.susto.sai{animation:sai .35s ease-in forwards}
+@keyframes sai{to{opacity:0}}
+
+/* ---------- botão da trilha ---------- */
+.trilha{position:fixed;z-index:45;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  display:inline-flex;align-items:center;gap:.5em;padding:.6em .9em;cursor:pointer;
+  background:rgba(10,8,8,.85);color:var(--papel-claro);border:1px solid #3a2a26;
+  font:900 .72rem/1 var(--f-texto);letter-spacing:.14em;text-transform:uppercase;backdrop-filter:blur(4px)}
+.trilha svg{width:18px;height:18px;fill:currentColor}
+.trilha .on{display:none}
+.trilha[aria-pressed="true"]{color:#e8b4ad;border-color:var(--sangue)}
+.trilha[aria-pressed="true"] .on{display:inline}
+.trilha[aria-pressed="true"] .off{display:none}
+.trilha[aria-pressed="true"] svg{animation:pulsa 1.5s ease-in-out infinite}
+@keyframes pulsa{0%,100%{opacity:1}14%{opacity:.4}28%{opacity:1}}
+
+.rodape{position:relative;z-index:2;text-align:center;font:.75rem/1.4 var(--f-ficha);color:#5b524e;margin-top:60px}
+
+@media (prefers-reduced-motion:reduce){*,body::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<main class="papel">
+  <svg class="sangue-topo" viewBox="0 0 620 110" preserveAspectRatio="none" aria-hidden="true">
+    <defs><linearGradient id="gSangue" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a0302"/><stop offset="1" stop-color="#8e0c08"/></linearGradient></defs>
+    <path fill="url(#gSangue)" d="M0 0H620V10C600 12 596 30 590 30S582 12 560 13C540 14 541 64 534 64S527 16 505 15C470 14 470 22 450 21S430 44 424 44 418 18 400 18C370 18 368 90 360 90S350 20 330 20C300 20 296 12 270 13S250 52 243 52 236 14 215 14C190 14 188 34 182 34S174 12 150 12C120 12 118 74 110 74S100 14 80 14C60 14 56 28 50 28S42 10 20 10C10 10 6 16 0 16Z"/>
+  </svg>
+
+  <section class="cartaz" aria-labelledby="titulo">
+    <h1 id="titulo">Avistou alguma anomalia, assombração ou monstruosidade?</h1>
+    <div class="rosto-wrap" id="rostoWrap" role="button" tabindex="0" aria-label="Cutucar o rosto">
+      <div class="rosto-anim">
+        <img class="rosto" id="rostoImg" src="rosto.jpg" alt="Desenho em preto e branco do rosto do homem, sorrindo de forma estranha. Os olhos dele seguem você.">
+        <svg class="olhos" viewBox="0 0 540 730" aria-hidden="true">
+          <defs>
+            <radialGradient id="gBranco" cx=".5" cy=".45" r=".6">
+              <stop offset="0" stop-color="#cfc8b8"/><stop offset=".65" stop-color="#a59a88"/><stop offset="1" stop-color="#5d4a3e"/>
+            </radialGradient>
+            <radialGradient id="gIris" cx=".5" cy=".5" r=".5">
+              <stop offset="0" stop-color="#000"/><stop offset=".45" stop-color="#000"/><stop offset=".55" stop-color="#3a0a06"/><stop offset=".9" stop-color="#160505"/><stop offset="1" stop-color="#000"/>
+            </radialGradient>
+            <radialGradient id="gGarganta" cx=".5" cy=".55" r=".55">
+              <stop offset="0" stop-color="#5a0000"/><stop offset="1" stop-color="#120000"/>
+            </radialGradient>
+            <linearGradient id="gDente" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#d9d0b4"/><stop offset=".7" stop-color="#f2ecd8"/><stop offset="1" stop-color="#8a1a10"/>
+            </linearGradient>
+            <linearGradient id="gGota" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#6b0000"/><stop offset=".7" stop-color="#a80c06"/><stop offset="1" stop-color="#5a0000"/>
+            </linearGradient>
+            <clipPath id="clipE"><path d="M106 410C126 388 176 386 196 408 176 428 130 432 106 410Z"/></clipPath>
+            <clipPath id="clipD"><path d="M338 406C360 386 410 384 426 404 406 426 362 428 338 406Z"/></clipPath>
+          </defs>
+          <g clip-path="url(#clipE)">
+            <path fill="url(#gBranco)" d="M106 410C126 388 176 386 196 408 176 428 130 432 106 410Z"/>
+            <g class="pupila" data-cx="151" data-cy="409" transform="translate(151 412)"><circle r="15" fill="url(#gIris)"/><circle cx="-4" cy="-5" r="2.6" fill="#e9e3d6"/></g>
+            <path d="M106 410C126 388 176 386 196 408" fill="none" stroke="#000" stroke-width="7"/>
+            <g class="palpebra"><path fill="#b3a994" d="M96 330H206V376Q151 388 96 376Z"/><path d="M96 376Q151 388 206 376" fill="none" stroke="#000" stroke-width="6"/></g>
+          </g>
+          <g clip-path="url(#clipD)">
+            <path fill="url(#gBranco)" d="M338 406C360 386 410 384 426 404 406 426 362 428 338 406Z"/>
+            <g class="pupila" data-cx="381" data-cy="406" transform="translate(381 409)"><circle r="15" fill="url(#gIris)"/><circle cx="-4" cy="-5" r="2.6" fill="#e9e3d6"/></g>
+            <path d="M338 406C360 386 410 384 426 404" fill="none" stroke="#000" stroke-width="7"/>
+            <g class="palpebra"><path fill="#b3a994" d="M328 326H436V372Q382 384 328 372Z"/><path d="M328 372Q382 384 436 372" fill="none" stroke="#000" stroke-width="6"/></g>
+          </g>
+          <g id="boca"></g>
+        </svg>
+      </div>
+    </div>
+    <p class="contador" aria-live="polite"><b id="contador">0</b><span id="contadorTxt">avistamentos registrados esta noite</span></p>
+    <hr class="linha">
+    <p class="chamado">Eles estão aqui e te observando. Várias pessoas já viram esta noite. Se apareceu algo para você, <strong>tire uma foto e registre o avistamento</strong>. No fim da noite, todos os registros serão reunidos.</p>
+    <button class="cta" type="button" id="irFicha">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3 7.2 5H4a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.2L15 3H9Zm3 5a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/></svg>
+      Eu avistei algo
+    </button>
+  </section>
+
+  <section class="ficha" id="ficha" aria-labelledby="fichaTitulo">
+    <hr class="linha">
+    <h2 id="fichaTitulo">Registro de avistamento</h2>
+    <p class="sub">Preencha com calma. Eles já te viram, não adianta ter pressa! Seu tempo está contado.</p>
+    <p class="modo-teste" id="modoTeste" hidden>Modo teste: o site ainda não foi ligado ao banco de fotos. O que você enviar fica só neste aparelho.</p>
+    <form id="form" novalidate>
+      <label class="foto-alvo" for="foto" id="fotoAlvo">
+        <span id="fotoTxt">Toque aqui para tirar a foto<br>ou escolher da galeria</span>
+        <img id="fotoPrev" alt="Prévia da foto escolhida" hidden>
+        <input type="file" id="foto" accept="image/*" capture="environment">
+      </label>
+      <div class="campos">
+        <div class="campos-dupla">
+          <label for="apelido">Testemunha
+            <input type="text" id="apelido" maxlength="40" placeholder="Seu nome ou apelido" autocomplete="nickname">
+          </label>
+          <label for="local">Onde foi visto
+            <input type="text" id="local" maxlength="60" placeholder="Pista, bar, banheiro…">
+          </label>
+        </div>
+        <label for="relato">O que aconteceu
+          <textarea id="relato" maxlength="280" placeholder="Ele sorriu pra mim. Eu não sorri de volta."></textarea>
+        </label>
+      </div>
+      <button class="cta enviar" type="submit" id="enviar">Registrar avistamento</button>
+      <p class="aviso" id="aviso" role="status"></p>
+    </form>
+  </section>
+</main>
+
+<section class="mural" aria-labelledby="muralTitulo">
+  <h2 id="muralTitulo">Arquivo de avistamentos</h2>
+  <p class="sub">Atualiza sozinho. Toque numa foto para ampliar.</p>
+  <div class="mural-acoes">
+    <button class="cta btn-escuro" type="button" id="abrirTelao">Modo telão</button>
+  </div>
+  <ul class="grade" id="grade">
+    <li class="vazio"><img src="rosto.jpg" alt="">Nenhum avistamento ainda.<br>Seja a primeira testemunha.</li>
+  </ul>
+</section>
+
+<p class="rodape">Caso nº 0001 · Se ele aparecer nos seus sonhos, não abra os olhos.</p>
+
+<div class="tela" id="tela" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
+  <button class="fechar" type="button" id="fecharTela">Fechar</button>
+  <figure><img id="telaImg" alt=""><figcaption id="telaLegenda"></figcaption></figure>
+</div>
+
+<button class="trilha" type="button" id="trilha" aria-pressed="false">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path class="on" d="M4 9v6h4l5 4V5L8 9H4Zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4ZM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6Z"/><path class="off" d="M4 9v6h4l5 4V5L8 9H4Zm12.6 3 2.7-2.7-1.4-1.4-2.7 2.7-2.7-2.7-1.4 1.4 2.7 2.7-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4-2.7-2.7Z"/></svg>
+  <span id="trilhaTxt">Ligar trilha</span>
+</button>
+
+<div class="susto" id="susto" hidden aria-hidden="true"><canvas id="sustoCanvas" width="540" height="730"></canvas></div>
+
+<script src="config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(() => {
+  const CFG = window.ESTE_HOMEM || {};
+  const NUVEM = !!(CFG.supabaseUrl && CFG.supabaseKey && window.supabase);
+  const $ = id => document.getElementById(id);
+  let registros = [];
+
+  // ---------- sons (sintetizados, sem arquivos) ----------
+  const Som = (() => {
+    let ctx, master, rev, ultimo;
+    function iniciar() {
+      if (ctx) return ctx;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      ctx = new AC();
+      const comp = ctx.createDynamicsCompressor();
+      comp.connect(ctx.destination);
+      master = ctx.createGain(); master.gain.value = .8; master.connect(comp);
+      rev = ctx.createConvolver(); rev.buffer = impulso(3.5, 2.6);
+      const rg = ctx.createGain(); rg.gain.value = .45; rev.connect(rg); rg.connect(comp);
+      return ctx;
+    }
+    function impulso(seg, dec) {
+      const n = ctx.sampleRate * seg, b = ctx.createBuffer(2, n, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) { const d = b.getChannelData(c); for (let i = 0; i < n; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / n, dec); }
+      return b;
+    }
+    function ruido(seg) {
+      const n = ctx.sampleRate * seg, b = ctx.createBuffer(1, n, ctx.sampleRate), d = b.getChannelData(0);
+      for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      const s = ctx.createBufferSource(); s.buffer = b; return s;
+    }
+    function saida(no, seco, molhado) {
+      const a = ctx.createGain(); a.gain.value = seco; no.connect(a); a.connect(master);
+      const b = ctx.createGain(); b.gain.value = molhado; no.connect(b); b.connect(rev);
+    }
+    function env(g, t, ataque, pico, queda) {
+      g.gain.setValueAtTime(.0001, t);
+      g.gain.exponentialRampToValueAtTime(pico, t + ataque);
+      g.gain.exponentialRampToValueAtTime(.0001, t + ataque + queda);
+    }
+    function osc(tipo, f, t, fim) { const o = ctx.createOscillator(); o.type = tipo; o.frequency.setValueAtTime(f, t); o.start(t); o.stop(fim); return o; }
+    function baque(t, vol) {
+      const o = osc("sine", 95, t, t + 1.1); o.frequency.exponentialRampToValueAtTime(28, t + .9);
+      const g = ctx.createGain(); env(g, t, .005, vol, 1); o.connect(g); saida(g, 1, .4);
+    }
+    function curva(k) {
+      const c = new Float32Array(1024);
+      for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; c[i] = (1 + k) * x / (1 + k * Math.abs(x)); }
+      return c;
+    }
+    const sons = {
+      sino() {
+        const t = ctx.currentTime, g = ctx.createGain(); env(g, t, .005, .45, 3.2); saida(g, .6, 1);
+        [[1, .6], [2.76, .3], [5.4, .15], [8.93, .08], [.5, .4]].forEach(([m, v]) => {
+          const o = osc("sine", 98 * m, t, t + 3.4), og = ctx.createGain(); og.gain.value = v; o.connect(og); og.connect(g);
+        });
+      },
+      rangido() {
+        const t = ctx.currentTime, o = osc("sawtooth", 40, t, t + 1.1); o.frequency.linearRampToValueAtTime(22, t + 1);
+        const lfo = osc("sine", 13, t, t + 1.1), lg = ctx.createGain(); lg.gain.value = 16; lfo.connect(lg); lg.connect(o.frequency);
+        const bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 8;
+        bp.frequency.setValueAtTime(800, t); bp.frequency.linearRampToValueAtTime(1700, t + 1);
+        const g = ctx.createGain(); env(g, t, .06, .8, 1); o.connect(bp); bp.connect(g); saida(g, .8, .6);
+      },
+      sussurro() {
+        const t = ctx.currentTime, n = ruido(1.5), bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.Q.value = 7;
+        bp.frequency.setValueAtTime(2800, t); bp.frequency.exponentialRampToValueAtTime(500, t + 1.3);
+        const g = ctx.createGain(); env(g, t, .25, .45, 1.1); n.connect(bp); bp.connect(g); saida(g, .6, 1); n.start(t);
+        baque(t + .1, .6);
+      },
+      acorde() {
+        const t = ctx.currentTime, g = ctx.createGain(); env(g, t, .015, .22, 1.7);
+        const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 2400; g.connect(lp); saida(lp, .7, 1);
+        [233.08, 246.94, 349.23, 369.99].forEach(f => [-8, 8].forEach(d => {
+          const o = osc("sawtooth", f, t, t + 1.9); o.detune.value = d; o.connect(g);
+        }));
+        baque(t, .5);
+      },
+      risada() {
+        const t = ctx.currentTime;
+        for (let i = 0; i < 5; i++) {
+          const ti = t + i * .16, o = osc("sawtooth", 150 - i * 9, ti, ti + .15);
+          o.frequency.exponentialRampToValueAtTime(110 - i * 9, ti + .14);
+          const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 700; f.Q.value = 3;
+          const g = ctx.createGain(); env(g, ti, .01, .35, .13); o.connect(f); f.connect(g); saida(g, .7, 1);
+        }
+      },
+    };
+    // ---------- trilha ambiente: sussurros com eco, drone grave, coração e cordas em tremolo ----------
+    let amb = null, ruidoCurto = null;
+    function sopro(t, dur, tipo, destino, vol) {
+      if (!ruidoCurto) {
+        ruidoCurto = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+        const d = ruidoCurto.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+      }
+      const s = ctx.createBufferSource(); s.buffer = ruidoCurto;
+      const f = ctx.createBiquadFilter();
+      if (tipo === "k") { f.type = "highpass"; f.frequency.value = 3200; }
+      else { f.type = "bandpass"; f.frequency.value = 1100; f.Q.value = 2.5; }
+      const g = ctx.createGain(); env(g, t, tipo === "k" ? .003 : .03, vol, dur);
+      s.connect(f); f.connect(g); g.connect(destino);
+      s.start(t, Math.random() * .5, dur + .05);
+    }
+    function pulso(t, vol, destino) {
+      const o = osc("sine", 70, t, t + .4); o.frequency.exponentialRampToValueAtTime(38, t + .3);
+      const g = ctx.createGain(); env(g, t, .008, vol, .3); o.connect(g); g.connect(destino);
+    }
+    function tremolo(t, dur, destino) {
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.09, t + dur * .9); g.gain.setValueAtTime(.0001, t + dur);
+      const am = ctx.createGain(); am.gain.value = 0;
+      const lfo = osc("square", 11, t, t + dur); const lg = ctx.createGain(); lg.gain.value = .5; lfo.connect(lg); lg.connect(am.gain);
+      const base = ctx.createConstantSource(); base.offset.value = .5; base.connect(am.gain); base.start(t); base.stop(t + dur);
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 3000;
+      [659.25, 698.46, 987.77].forEach(f => [-10, 10].forEach(d => { const o = osc("sawtooth", f, t, t + dur); o.detune.value = d; o.connect(am); }));
+      am.connect(lp); lp.connect(g); g.connect(destino);
+    }
+    function agendar() {
+      if (!amb) return;
+      const BAR = 6;
+      while (amb.prox < ctx.currentTime + 1.5) {
+        const t = amb.prox, n = amb.compasso++;
+        pulso(t, .7, amb.bus); pulso(t + .28, .45, amb.bus);
+        pulso(t + 3, .7, amb.bus); pulso(t + 3.28, .45, amb.bus);
+        if (n % 2 === 0) {
+          [.6, .95, 1.3].forEach(o => sopro(t + o, .05, "k", amb.eco, .5));
+          [2.1, 2.45, 2.8].forEach(o => sopro(t + o, .22, "h", amb.eco, .35));
+        }
+        if (n % 4 === 3) tremolo(t + 1.5, 4.2, amb.bus);
+        if (n % 4 === 1) {
+          const g = ctx.createGain(); env(g, t + 4.5, .01, .25, 2.5); g.connect(amb.bus);
+          [43.65, 46.25, 65.41].forEach(f => osc("triangle", f, t + 4.5, t + 7.2).connect(g));
+        }
+        amb.prox += BAR;
+      }
+    }
+    function trilha(ligar) {
+      if (!iniciar()) return false;
+      ctx.resume();
+      const t = ctx.currentTime;
+      if (!ligar) {
+        if (!amb) return false;
+        const a = amb; amb = null; clearInterval(a.timer);
+        a.bus.gain.cancelScheduledValues(t); a.bus.gain.setValueAtTime(a.bus.gain.value, t);
+        a.bus.gain.exponentialRampToValueAtTime(.0001, t + 1.2);
+        setTimeout(() => { a.fontes.forEach(o => o.stop()); a.bus.disconnect(); }, 1400);
+        return false;
+      }
+      if (amb) return true;
+      const bus = ctx.createGain();
+      bus.gain.setValueAtTime(.0001, t); bus.gain.exponentialRampToValueAtTime(.5, t + 4);
+      bus.connect(master);
+      const busRev = ctx.createGain(); busRev.gain.value = .7; bus.connect(busRev); busRev.connect(rev);
+      const eco = ctx.createDelay(2); eco.delayTime.value = .375;
+      const fb = ctx.createGain(); fb.gain.value = .5;
+      const ecoF = ctx.createBiquadFilter(); ecoF.type = "lowpass"; ecoF.frequency.value = 2600;
+      eco.connect(ecoF); ecoF.connect(fb); fb.connect(eco); ecoF.connect(bus);
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 240; lp.Q.value = 5;
+      const lfo = ctx.createOscillator(); lfo.frequency.value = .07; lfo.start(t);
+      const lg = ctx.createGain(); lg.gain.value = 130; lfo.connect(lg); lg.connect(lp.frequency);
+      const dg = ctx.createGain(); dg.gain.value = .3; lp.connect(dg); dg.connect(bus);
+      const fontes = [lfo];
+      [55, 58.27, 82.41].forEach(f => [-6, 6].forEach(d => {
+        const o = ctx.createOscillator(); o.type = "sawtooth"; o.frequency.value = f; o.detune.value = d; o.connect(lp); o.start(t); fontes.push(o);
+      }));
+      amb = { bus, eco, fontes, prox: t + .5, compasso: 0 };
+      amb.timer = setInterval(agendar, 250);
+      agendar();
+      return true;
+    }
+    document.addEventListener("visibilitychange", () => { if (ctx) document.hidden ? ctx.suspend() : ctx.resume(); });
+
+    function grito() {
+      if (!iniciar()) return;
+      ctx.resume();
+      const t = ctx.currentTime;
+      if (amb) {
+        amb.bus.gain.cancelScheduledValues(t); amb.bus.gain.setValueAtTime(.05, t);
+        amb.bus.gain.setValueAtTime(.05, t + 2.5); amb.bus.gain.exponentialRampToValueAtTime(.5, t + 5);
+      }
+      const dist = ctx.createWaveShaper(); dist.curve = curva(40);
+      const g = ctx.createGain();
+      g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.9, t + .03);
+      g.gain.setValueAtTime(.9, t + 1.1); g.gain.exponentialRampToValueAtTime(.0001, t + 2.1);
+      dist.connect(g); saida(g, 1, .7);
+      [[880, 1300, 7], [1046, 2600, 8.3], [740, 3400, 9.1], [520, 900, 6.2]].forEach(([f0, formante, vib]) => {
+        const o = osc("sawtooth", f0 * .7, t, t + 2.2);
+        o.frequency.exponentialRampToValueAtTime(f0, t + .12);
+        o.frequency.exponentialRampToValueAtTime(f0 * .42, t + 2);
+        const v = osc("sine", vib, t, t + 2.2), vg = ctx.createGain(); vg.gain.value = 30; v.connect(vg); vg.connect(o.frequency);
+        const f = ctx.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = formante; f.Q.value = 2;
+        const og = ctx.createGain(); og.gain.value = .3; o.connect(f); f.connect(og); og.connect(dist);
+      });
+      const n = ruido(2.2), hp = ctx.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1500;
+      const ng = ctx.createGain(); ng.gain.value = .35; n.connect(hp); hp.connect(ng); ng.connect(dist); n.start(t);
+      baque(t, 1);
+      sons.acorde();
+    }
+    function rosnado() {
+      if (!iniciar()) return;
+      ctx.resume();
+      const t = ctx.currentTime;
+      const o = osc("sawtooth", 62, t, t + 1.6); o.frequency.linearRampToValueAtTime(48, t + 1.5);
+      const am = ctx.createGain(); am.gain.value = .5;
+      const lfo = osc("sine", 23, t, t + 1.6), lg = ctx.createGain(); lg.gain.value = .5; lfo.connect(lg); lg.connect(am.gain);
+      const lp = ctx.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 700; lp.Q.value = 6;
+      const g = ctx.createGain(); env(g, t, .08, .9, 1.4);
+      o.connect(am); am.connect(lp); lp.connect(g); saida(g, 1, .5);
+      const n = ruido(1.5), bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 400; bp.Q.value = 1.5;
+      const ng = ctx.createGain(); env(ng, t, .05, .4, 1.3); n.connect(bp); bp.connect(am); n.start(t);
+      baque(t, .7);
+    }
+    function clique() {
+      if (!iniciar()) return;
+      ctx.resume();
+      const nomes = Object.keys(sons);
+      let n; do n = nomes[Math.random() * nomes.length | 0]; while (n === ultimo);
+      ultimo = n; sons[n]();
+    }
+    return { clique, grito, trilha, rosnado };
+  })();
+  document.addEventListener("click", e => {
+    if (e.target.closest("button:not(#trilha), .foto-alvo, .polaroid img")) Som.clique();
+  });
+
+  // trilha: navegadores só liberam som depois do primeiro toque, então ela começa aí
+  const PREF = "este-homem-trilha";
+  let trilhaQuer = true;
+  try { trilhaQuer = localStorage.getItem(PREF) !== "off"; } catch {}
+  function marcarTrilha(ligada) {
+    $("trilha").setAttribute("aria-pressed", ligada);
+    $("trilhaTxt").textContent = ligada ? "Trilha ligada" : "Ligar trilha";
+  }
+  function primeiroToque(e) {
+    if (e.target.closest("#trilha")) return;
+    document.removeEventListener("click", primeiroToque, true);
+    document.removeEventListener("touchend", primeiroToque, true);
+    if (trilhaQuer) marcarTrilha(Som.trilha(true));
+  }
+  document.addEventListener("click", primeiroToque, true);
+  document.addEventListener("touchend", primeiroToque, true);
+  $("trilha").addEventListener("click", () => {
+    trilhaQuer = $("trilha").getAttribute("aria-pressed") !== "true";
+    try { localStorage.setItem(PREF, trilhaQuer ? "on" : "off"); } catch {}
+    document.removeEventListener("click", primeiroToque, true);
+    document.removeEventListener("touchend", primeiroToque, true);
+    marcarTrilha(Som.trilha(trilhaQuer));
+  });
+
+  // ---------- olhos que seguem ----------
+  const pupilas = [...document.querySelectorAll(".pupila")];
+  const svgOlhos = document.querySelector(".olhos");
+  let alvo = null, ultimoMov = 0;
+  function olhar(x, y) {
+    const box = svgOlhos.getBoundingClientRect();
+    if (!box.width) return;
+    const esc = box.width / 540;
+    pupilas.forEach(p => {
+      const cx = +p.dataset.cx, cy = +p.dataset.cy;
+      const sx = box.left + cx * esc, sy = box.top + cy * esc;
+      const dx = x - sx, dy = y - sy, dist = Math.hypot(dx, dy) || 1;
+      const forca = Math.min(1, dist / (150 * esc + 60));
+      p.setAttribute("transform", `translate(${cx + dx / dist * 24 * forca} ${cy + dy / dist * 7 * forca})`);
+    });
+  }
+  addEventListener("pointermove", e => { alvo = [e.clientX, e.clientY]; ultimoMov = performance.now(); olhar(...alvo); }, { passive: true });
+  addEventListener("pointerdown", e => { alvo = [e.clientX, e.clientY]; ultimoMov = performance.now(); olhar(...alvo); }, { passive: true });
+  addEventListener("scroll", () => { if (alvo) olhar(...alvo); }, { passive: true });
+  // sem mouse (celular parado): ele fica olhando em volta
+  setInterval(() => {
+    if (performance.now() - ultimoMov < 3000) return;
+    const b = svgOlhos.getBoundingClientRect();
+    olhar(b.left + Math.random() * b.width * 3 - b.width, b.top + Math.random() * b.height * 1.6);
+  }, 1400);
+  const olharInicio = () => olhar(innerWidth / 2, innerHeight);
+  $("rostoImg").complete ? olharInicio() : $("rostoImg").addEventListener("load", olharInicio, { once: true });
+
+  // ---------- piscar ----------
+  function piscar() {
+    svgOlhos.classList.add("piscando");
+    setTimeout(() => svgOlhos.classList.remove("piscando"), 140);
+  }
+  (function proximaPiscada() {
+    setTimeout(() => {
+      piscar();
+      if (Math.random() < .25) setTimeout(piscar, 320);
+      proximaPiscada();
+    }, 2500 + Math.random() * 4500);
+  })();
+
+  // ---------- boca que abre ao tocar no rosto ----------
+  (function montarBoca() {
+    const NS = "http://www.w3.org/2000/svg", boca = $("boca");
+    const add = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); boca.append(e); return e; };
+    const cx = 270, x0 = 132, x1 = 408;
+    const cima = x => 596 - .0013 * (x - cx) ** 2;
+    const baixo = x => 684 - .0037 * (x - cx) ** 2;
+    let d = `M${x0} ${cima(x0)}`;
+    for (let x = x0; x <= x1; x += 6) d += `L${x} ${cima(x).toFixed(1)}`;
+    for (let x = x1; x >= x0; x -= 6) d += `L${x} ${baixo(x).toFixed(1)}`;
+    add("path", { d: d + "Z", fill: "url(#gGarganta)", stroke: "#000", "stroke-width": 4 });
+    const dente = (x, base, ponta, larg) => add("path", {
+      d: `M${x - larg / 2} ${base}Q${x - larg * .1} ${(base + ponta) / 2} ${x} ${ponta}Q${x + larg * .1} ${(base + ponta) / 2} ${x + larg / 2} ${base}Z`,
+      fill: "url(#gDente)", stroke: "#2a1a10", "stroke-width": 1.5,
+    });
+    const gota = (x, y, larg, comp, atraso) => add("path", {
+      class: "gota", style: `--d:${atraso}s`, fill: "url(#gGota)",
+      d: `M${x - larg / 2} ${y}C${x - larg * .3} ${y + comp * .5} ${x - larg * .4} ${y + comp * .8} ${x - larg * .4} ${y + comp}` +
+         `A${larg * .45} ${larg * .45} 0 0 0 ${x + larg * .4} ${y + comp}C${x + larg * .4} ${y + comp * .8} ${x + larg * .3} ${y + comp * .5} ${x + larg / 2} ${y}Z`,
+    });
+    const pontas = [];
+    for (let x = x0 + 16; x <= x1 - 12; x += 20) {
+      const prof = baixo(x) - cima(x), canino = Math.abs(x - cx) > 55 && Math.abs(x - cx) < 85;
+      const ponta = cima(x) + prof * (canino ? .8 : .5);
+      dente(x, cima(x) - 2, ponta, canino ? 19 : 17);
+      pontas.push([x, ponta]);
+    }
+    for (let x = x0 + 26; x <= x1 - 20; x += 20) {
+      const prof = baixo(x) - cima(x);
+      dente(x, baixo(x) + 2, baixo(x) - prof * .42, 15);
+    }
+    // sangue escorrendo dos dentes e dos cantos da boca
+    pontas.filter((_, i) => i % 3 === 1).forEach(([x, y], i) => gota(x, y - 4, 7, 40 + (i * 23) % 45, .1 + i * .12));
+    [[x0 + 6, 9, 90, .2], [x1 - 6, 8, 70, .35], [cx - 30, 10, 110, .15], [cx + 24, 8, 85, .4]]
+      .forEach(([x, l, c, a]) => gota(x, baixo(x) - 6, l, c, a));
+  })();
+  let bocaTimer = null;
+  function abrirBoca() {
+    const w = $("rostoWrap");
+    w.classList.add("boca-aberta");
+    Som.rosnado();
+    navigator.vibrate?.(200);
+    clearTimeout(bocaTimer);
+    bocaTimer = setTimeout(() => w.classList.remove("boca-aberta"), 2800);
+  }
+  $("rostoWrap").addEventListener("click", abrirBoca);
+  $("rostoWrap").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrirBoca(); } });
+
+  // ---------- rosto do susto (desenhado sobre o rosto original) ----------
+  const sustoPronto = new Promise(ok => {
+    const img = $("rostoImg");
+    const desenhar = () => { try { desenharSusto(img); } catch (e) { console.error(e); } ok(); };
+    img.complete ? desenhar() : img.addEventListener("load", desenhar, { once: true });
+  });
+  function desenharSusto(img) {
+    const c = $("sustoCanvas"), g = c.getContext("2d");
+    g.filter = "grayscale(1) contrast(1.7) brightness(.8)";
+    g.drawImage(img, 0, 0, 540, 730);
+    g.filter = "none";
+    // pele doente
+    g.globalCompositeOperation = "multiply";
+    g.fillStyle = "#b8a99a"; g.fillRect(0, 0, 540, 730);
+    g.globalCompositeOperation = "source-over";
+    const vin = g.createRadialGradient(270, 430, 120, 270, 430, 420);
+    vin.addColorStop(0, "rgba(0,0,0,0)"); vin.addColorStop(1, "rgba(0,0,0,.95)");
+    g.fillStyle = vin; g.fillRect(0, 0, 540, 730);
+
+    // olhos: buracos negros com brasa vermelha
+    [[151, 409, 46, 24], [381, 406, 44, 23]].forEach(([x, y, rx, ry]) => {
+      g.fillStyle = "#000"; g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); g.fill();
+      const br = g.createRadialGradient(x, y + 2, 0, x, y + 2, 13);
+      br.addColorStop(0, "#fff2c0"); br.addColorStop(.25, "#ff3a1a"); br.addColorStop(1, "rgba(120,0,0,0)");
+      g.fillStyle = br; g.beginPath(); g.arc(x, y + 2, 13, 0, Math.PI * 2); g.fill();
+    });
+
+    // sangue escorrendo dos olhos
+    const escorrer = (x, y, larg, comp) => {
+      const gr = g.createLinearGradient(0, y, 0, y + comp);
+      gr.addColorStop(0, "#5a0000"); gr.addColorStop(.6, "#9c0a05"); gr.addColorStop(1, "#6b0000");
+      g.fillStyle = gr;
+      const torto = (Math.random() - .5) * 14;
+      g.beginPath();
+      g.moveTo(x - larg / 2, y);
+      g.bezierCurveTo(x - larg * .2 + torto, y + comp * .4, x - larg * .3 - torto, y + comp * .7, x - larg * .3 + torto * .5, y + comp);
+      g.arc(x + torto * .5, y + comp, larg * .45, Math.PI, 0, true);
+      g.bezierCurveTo(x + larg * .3 - torto, y + comp * .7, x + larg * .2 + torto, y + comp * .4, x + larg / 2, y);
+      g.closePath(); g.fill();
+      g.strokeStyle = "rgba(255,120,100,.35)"; g.lineWidth = 1.2;
+      g.beginPath(); g.moveTo(x - larg * .15, y + 6); g.lineTo(x - larg * .15 + torto * .4, y + comp * .8); g.stroke();
+    };
+    [[151, 409], [381, 406]].forEach(([x, y]) => {
+      const m = g.createRadialGradient(x, y + 22, 4, x, y + 22, 60);
+      m.addColorStop(0, "rgba(130,0,0,.85)"); m.addColorStop(1, "rgba(90,0,0,0)");
+      g.fillStyle = m; g.beginPath(); g.ellipse(x, y + 24, 58, 26, 0, 0, Math.PI * 2); g.fill();
+    });
+    [[112, 12, 170], [132, 18, 290], [152, 11, 130], [172, 16, 240], [190, 9, 110],
+     [344, 14, 250], [364, 19, 330], [386, 12, 150], [406, 15, 220], [422, 9, 120]]
+      .forEach(([x, l, cp]) => escorrer(x, 418, l, cp));
+
+    // boca aberta com dentes afiados
+    const cx = 270, x0 = 128, x1 = 412;
+    const cima = x => 598 - .0013 * (x - cx) ** 2;
+    const baixo = x => 692 - .0042 * (x - cx) ** 2;
+    g.fillStyle = "#120000";
+    g.beginPath(); g.moveTo(x0, cima(x0));
+    for (let x = x0; x <= x1; x += 4) g.lineTo(x, cima(x));
+    for (let x = x1; x >= x0; x -= 4) g.lineTo(x, baixo(x));
+    g.closePath(); g.fill();
+    const garganta = g.createRadialGradient(cx, 635, 0, cx, 635, 70);
+    garganta.addColorStop(0, "#4a0000"); garganta.addColorStop(1, "rgba(18,0,0,0)");
+    g.fillStyle = garganta; g.fill();
+    const dente = (x, base, ponta, larg) => {
+      const gr = g.createLinearGradient(0, base, 0, ponta);
+      gr.addColorStop(0, "#d9d0b4"); gr.addColorStop(.75, "#efe8d2"); gr.addColorStop(1, "#8a1a10");
+      g.fillStyle = gr; g.strokeStyle = "#2a1a10"; g.lineWidth = 1.5;
+      g.beginPath(); g.moveTo(x - larg / 2, base); g.quadraticCurveTo(x - larg * .1, (base + ponta) / 2, x, ponta);
+      g.quadraticCurveTo(x + larg * .1, (base + ponta) / 2, x + larg / 2, base); g.closePath(); g.fill(); g.stroke();
+    };
+    for (let x = x0 + 16; x <= x1 - 12; x += 22) {
+      const prof = baixo(x) - cima(x), canino = Math.abs(x - cx) > 60 && Math.abs(x - cx) < 90;
+      dente(x, cima(x) - 2, cima(x) + prof * (canino ? .85 : .55), canino ? 20 : 18);
+    }
+    for (let x = x0 + 27; x <= x1 - 20; x += 22) {
+      const prof = baixo(x) - cima(x);
+      dente(x, baixo(x) + 2, baixo(x) - prof * .45, 16);
+    }
+    // sangue no canto da boca e no queixo
+    [[150, 4, 70], [244, 7, 90], [300, 6, 60], [395, 5, 80]].forEach(([x, l, cp]) => escorrer(x, baixo(x) - 2, l, cp));
+  }
+  async function assustar() {
+    await sustoPronto;
+    const s = $("susto");
+    s.classList.remove("sai"); s.hidden = false;
+    Som.grito();
+    navigator.vibrate?.([300, 80, 500]);
+    await new Promise(r => setTimeout(r, 1800));
+    s.classList.add("sai");
+    await new Promise(r => setTimeout(r, 350));
+    s.hidden = true;
+  }
+
+  // ---------- armazenamento ----------
+  const nuvem = NUVEM && (() => {
+    const sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+    return {
+      async listar() {
+        const { data, error } = await sb.from(CFG.tabela).select("*").order("created_at", { ascending: false }).limit(500);
+        if (error) throw error;
+        return data;
+      },
+      async adicionar(blob, dados) {
+        const caminho = `${new Date().toISOString().slice(0, 10)}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+        const up = await sb.storage.from(CFG.bucket).upload(caminho, blob, { contentType: "image/jpeg" });
+        if (up.error) throw up.error;
+        const foto_url = sb.storage.from(CFG.bucket).getPublicUrl(caminho).data.publicUrl;
+        const { error } = await sb.from(CFG.tabela).insert({ ...dados, foto_url });
+        if (error) throw error;
+      },
+    };
+  })();
+
+  const CHAVE = "este-homem-teste";
+  const local = {
+    async listar() {
+      try { return JSON.parse(localStorage.getItem(CHAVE)) || []; } catch { return []; }
+    },
+    async adicionar(blob, dados) {
+      const foto_url = await new Promise(r => { const f = new FileReader(); f.onload = () => r(f.result); f.readAsDataURL(blob); });
+      const lista = await local.listar();
+      lista.unshift({ id: Date.now(), created_at: new Date().toISOString(), ...dados, foto_url });
+      try { localStorage.setItem(CHAVE, JSON.stringify(lista.slice(0, 30))); }
+      catch { throw new Error("Sem espaço no navegador para mais fotos de teste."); }
+    },
+  };
+  const loja = nuvem || local;
+  $("modoTeste").hidden = NUVEM;
+
+  // ---------- foto ----------
+  let fotoBlob = null;
+  async function reduzir(arquivo, max) {
+    const img = await new Promise((ok, falha) => {
+      const i = new Image(); i.onload = () => ok(i); i.onerror = falha; i.src = URL.createObjectURL(arquivo);
+    });
+    const esc = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement("canvas");
+    c.width = Math.round(img.naturalWidth * esc); c.height = Math.round(img.naturalHeight * esc);
+    c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(img.src);
+    return new Promise(r => c.toBlob(r, "image/jpeg", 0.85));
+  }
+  $("foto").addEventListener("change", async e => {
+    const arq = e.target.files[0];
+    if (!arq) return;
+    aviso("");
+    try {
+      fotoBlob = await reduzir(arq, NUVEM ? 1600 : 700);
+      $("fotoPrev").src = URL.createObjectURL(fotoBlob);
+      $("fotoPrev").hidden = false; $("fotoTxt").hidden = true;
+    } catch { aviso("Não consegui abrir essa imagem. Tente outra foto.", true); }
+  });
+
+  // ---------- envio ----------
+  function aviso(txt, erro) { $("aviso").textContent = txt; $("aviso").classList.toggle("erro", !!erro); }
+  $("form").addEventListener("submit", async e => {
+    e.preventDefault();
+    if (!fotoBlob) { aviso("Sem foto não tem prova. Tire uma foto dele primeiro.", true); return; }
+    const btn = $("enviar");
+    btn.disabled = true; btn.textContent = "Registrando…"; aviso("");
+    try {
+      await loja.adicionar(fotoBlob, {
+        apelido: $("apelido").value.trim().slice(0, 40) || null,
+        local: $("local").value.trim().slice(0, 60) || null,
+        relato: $("relato").value.trim().slice(0, 280) || null,
+      });
+      $("form").reset(); fotoBlob = null;
+      $("fotoPrev").hidden = true; $("fotoTxt").hidden = false;
+      await assustar();
+      aviso("Avistamento registrado. Ele sabe que foi você.");
+      await carregar();
+      document.querySelector(".mural").scrollIntoView({ behavior: "smooth" });
+    } catch (err) {
+      console.error(err);
+      aviso("Não foi possível enviar. Confira a internet e tente de novo.", true);
+    } finally {
+      btn.disabled = false; btn.textContent = "Registrar avistamento";
+    }
+  });
+
+  // ---------- mural ----------
+  const hora = iso => new Date(iso).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const num = n => "Nº " + String(n).padStart(3, "0");
+  function el(tag, cls, txt) { const e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
+
+  function render() {
+    const total = registros.length;
+    $("contador").textContent = total;
+    $("contadorTxt").textContent = total === 1 ? "avistamento registrado esta noite" : "avistamentos registrados esta noite";
+    if (!total) return;
+    const grade = $("grade");
+    grade.replaceChildren(...registros.map((r, i) => {
+      const li = el("li", "polaroid");
+      li.style.setProperty("--rot", ((r.id * 37) % 9 - 4) + "deg");
+      const img = el("img"); img.src = r.foto_url; img.alt = "Foto do avistamento " + num(total - i); img.loading = "lazy";
+      img.addEventListener("click", () => abrir(i));
+      const cab = el("div", "num"); cab.append(el("span", null, "Avistamento " + num(total - i)), el("time", null, hora(r.created_at)));
+      li.append(img, cab);
+      if (r.relato) li.append(el("p", null, "“" + r.relato + "”"));
+      const quem = [r.apelido, r.local && "em " + r.local].filter(Boolean).join(" · ");
+      if (quem) li.append(el("p", "quem", quem));
+      return li;
+    }));
+  }
+
+  async function carregar() {
+    try { registros = await loja.listar(); render(); }
+    catch (err) { console.error(err); }
+  }
+
+  // ---------- telão / zoom ----------
+  let idx = 0, timer = null;
+  function mostrar(i) {
+    const r = registros[i]; if (!r) return;
+    idx = i;
+    const t = $("tela");
+    t.classList.remove("entra"); void t.offsetWidth; t.classList.add("entra");
+    $("telaImg").src = r.foto_url;
+    $("telaImg").alt = "Avistamento " + num(registros.length - i);
+    const leg = $("telaLegenda");
+    leg.replaceChildren(el("b", null, "Avistamento " + num(registros.length - i)));
+    const linha = [r.relato && "“" + r.relato + "”", [r.apelido, r.local, hora(r.created_at)].filter(Boolean).join(" · ")].filter(Boolean);
+    linha.forEach(l => leg.append(el("span", null, l), document.createElement("br")));
+  }
+  function abrir(i) { $("tela").hidden = false; mostrar(i); }
+  function fechar() { $("tela").hidden = true; clearInterval(timer); timer = null; document.exitFullscreen?.().catch(() => {}); }
+  $("fecharTela").addEventListener("click", fechar);
+  $("tela").addEventListener("click", e => { if (e.target === $("tela")) fechar(); });
+  document.addEventListener("keydown", e => {
+    if ($("tela").hidden) return;
+    if (e.key === "Escape") fechar();
+    if (e.key === "ArrowRight") mostrar((idx + 1) % registros.length);
+    if (e.key === "ArrowLeft") mostrar((idx - 1 + registros.length) % registros.length);
+  });
+  $("abrirTelao").addEventListener("click", () => {
+    if (!registros.length) { $("ficha").scrollIntoView({ behavior: "smooth" }); return; }
+    document.documentElement.requestFullscreen?.().catch(() => {});
+    abrir(registros.length - 1);
+    clearInterval(timer);
+    timer = setInterval(() => mostrar((idx - 1 + registros.length) % registros.length), 5000);
+  });
+
+  // ---------- clima ----------
+  function tremer() {
+    const w = $("rostoWrap"); w.classList.remove("piscou"); void w.offsetWidth; w.classList.add("piscou");
+  }
+  setInterval(() => { if (Math.random() < 0.35) tremer(); }, 9000);
+  $("irFicha").addEventListener("click", () => { $("ficha").scrollIntoView({ behavior: "smooth" }); });
+
+  carregar();
+  if (NUVEM) setInterval(() => { if (!document.hidden) carregar(); }, 15000);
+})();
+</script>
+</body>
+</html>
