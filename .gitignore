@@ -3,3 +3,5 @@ Thumbs.db
 desktop.ini
 .netlify/
 Banco de Dados.txt
+# tem o e-mail do moderador
+moderacao-setup.sql
