@@ -953,7 +953,9 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       $("form").reset(); fotoBlob = null;
       $("fotoPrev").hidden = true; $("fotoTxt").hidden = false;
       await assustar();
-      aviso("Avistamento registrado. Ele sabe que foi você.");
+      aviso(NUVEM
+        ? "Avistamento registrado. Ele sabe que foi você. Sua foto aparece no mural assim que for verificada."
+        : "Avistamento registrado. Ele sabe que foi você.");
       await carregar();
       document.querySelector(".mural").scrollIntoView({ behavior: "smooth" });
     } catch (err) {
