@@ -155,19 +155,28 @@ h1{font:400 clamp(1.9rem,6vw,2.6rem)/1 var(--f-titulo);margin:0;letter-spacing:.
   });
   $("sair").addEventListener("click", () => sb.auth.signOut());
 
-  let timer = null;
-  sb.auth.onAuthStateChange(async (_evento, sessao) => {
-    const logado = !!sessao;
-    $("telaLogin").hidden = logado; $("painel").hidden = !logado;
+  let timer = null, emailAtual = null;
+  // a supabase-js trava se outra chamada ao banco for aguardada dentro deste aviso,
+  // então o painel é montado logo depois, fora dele
+  sb.auth.onAuthStateChange((_evento, sessao) => {
+    const email = sessao?.user?.email || null;
+    if (email === emailAtual) return; // renovação do token: nada muda na tela
+    emailAtual = email;
+    setTimeout(() => abrirPainel(email), 0);
+  });
+  async function abrirPainel(email) {
+    $("telaLogin").hidden = !!email; $("painel").hidden = !email;
     clearInterval(timer);
-    if (!logado) { document.title = "Moderação dos Avistamentos"; return; }
-    $("quem").textContent = "Conectado como " + sessao.user.email;
-    const { data } = await sb.rpc("eh_moderador");
+    if (!email) { document.title = "Moderação dos Avistamentos"; return; }
+    $("quem").textContent = "Conectado como " + email;
+    $("status").textContent = "Carregando…";
+    const { data, error } = await sb.rpc("eh_moderador");
+    if (error) { $("status").textContent = "Erro ao verificar o moderador: " + error.message; return; }
     moderador = data === true;
     $("semPermissao").hidden = moderador;
     carregar();
     timer = setInterval(() => { if (!document.hidden) carregar(); }, 15000);
-  });
+  }
 
   // ---------- lista ----------
   async function carregar() {
