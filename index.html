@@ -879,7 +879,11 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
 
   // ---------- armazenamento ----------
   const nuvem = NUVEM && (() => {
-    const sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey);
+    // sempre como visitante: sem isso, quem entrou em moderar.html neste aparelho
+    // enviaria como moderador, e o banco só aceita envio de visitante
+    const sb = window.supabase.createClient(CFG.supabaseUrl, CFG.supabaseKey, {
+      auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: "site-visitante" },
+    });
     return {
       async listar() {
         const { data, error } = await sb.from(CFG.tabela).select("*").order("created_at", { ascending: false }).limit(500);
