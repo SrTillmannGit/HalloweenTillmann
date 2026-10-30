@@ -85,11 +85,31 @@ button,input,textarea{font:inherit;color:inherit}
 .rosto-wrap.piscou .rosto-anim{animation:tremor .18s steps(2) 3}
 .rosto{filter:grayscale(1) contrast(1.5) brightness(.68) sepia(.35);
   -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 75%,transparent 100%)}
-.olhos{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.olhos{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;transition:opacity .15s}
+/* troca de rosto: um aparece enquanto o outro some, piscando, com o rosto tremendo;
+   no fim só um fica visível (as opacidades dos dois somam 1 em cada quadro) */
+.rosto{display:block;width:100%;height:auto}
+.rosto-b{position:absolute;inset:0;opacity:0}
+.rosto.entra{animation:surge .7s linear both}
+.rosto.sai{animation:some .7s linear both}
+@keyframes surge{0%{opacity:0}15%{opacity:1}30%{opacity:0}45%{opacity:.8}60%{opacity:.1}75%,100%{opacity:1}}
+@keyframes some{0%{opacity:1}15%{opacity:0}30%{opacity:1}45%{opacity:.2}60%{opacity:.9}75%,100%{opacity:0}}
+.rosto-wrap.trocando .olhos{opacity:0}
+/* chiado de TV e mensagem subliminar durante a troca */
+.chiado{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0;image-rendering:pixelated;
+  -webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 50%,#000 70%,transparent 100%)}
+.rosto-wrap.trocando .chiado{opacity:.85}
+.subliminar{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%) scaleY(1.15);margin:0;pointer-events:none;
+  font:400 clamp(1.5rem,7vw,2.3rem)/1 var(--f-titulo);text-align:center;letter-spacing:.04em;color:#e9e3d6;
+  text-shadow:-3px 0 rgba(179,20,13,.9),3px 0 rgba(0,160,255,.35),0 0 12px #000;visibility:hidden}
+.rosto-wrap.subliminando .subliminar{visibility:visible}
+.rosto-wrap.trocando .rosto-anim{animation:troca .7s steps(1)}
+@keyframes troca{0%{transform:translate(-4px,2px) skewX(-6deg)}20%{transform:translate(5px,-2px) scale(1.03)}
+  40%{transform:translate(-2px,0) skewX(4deg)}60%{transform:translate(3px,1px)}80%{transform:translate(-1px,-1px) scale(1.01)}100%{transform:none}}
 .rosto-wrap{cursor:pointer;-webkit-tap-highlight-color:transparent}
 .palpebra{transition:transform .07s ease-in}
 .olhos.piscando .palpebra{transform:translateY(50px)}
-#boca{transform-origin:270px 596px;transform:scaleY(0);transition:transform .14s ease-in}
+#boca{transform:scaleY(0);transition:transform .14s ease-in}
 .rosto-wrap.boca-aberta #boca{transform:scaleY(1);transition:transform .28s cubic-bezier(.3,1.7,.5,1)}
 #boca .gota{transform-box:fill-box;transform-origin:50% 0;transform:scaleY(0)}
 .rosto-wrap.boca-aberta #boca .gota{animation:escorre 1.6s cubic-bezier(.5,0,.8,.6) var(--d,0s) both}
@@ -210,7 +230,8 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
     <h1 id="titulo">Avistou alguma anomalia, assombração ou monstruosidade?</h1>
     <div class="rosto-wrap" id="rostoWrap" role="button" tabindex="0" aria-label="Cutucar o rosto">
       <div class="rosto-anim">
-        <img class="rosto" id="rostoImg" src="rosto.jpg" alt="Desenho em preto e branco do rosto do homem, sorrindo de forma estranha. Os olhos dele seguem você.">
+        <img class="rosto" id="rostoImg" src="rosto.jpg" alt="Desenho em preto e branco de um rosto que muda: ora sorri de forma estranha, ora vira um homem barbudo encarando fixamente. Os olhos dele seguem você.">
+        <img class="rosto rosto-b" id="rostoImgB" src="rosto-novo.jpg" alt="">
         <svg class="olhos" viewBox="0 0 540 730" aria-hidden="true">
           <defs>
             <radialGradient id="gBranco" cx=".5" cy=".45" r=".6">
@@ -228,24 +249,26 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
             <linearGradient id="gGota" x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stop-color="#6b0000"/><stop offset=".7" stop-color="#a80c06"/><stop offset="1" stop-color="#5a0000"/>
             </linearGradient>
-            <clipPath id="clipE"><path d="M106 410C126 388 176 386 196 408 176 428 130 432 106 410Z"/></clipPath>
-            <clipPath id="clipD"><path d="M338 406C360 386 410 384 426 404 406 426 362 428 338 406Z"/></clipPath>
+            <clipPath id="clipE"><path d="M149 357C163 334 208 332 224 354 206 376 166 378 149 357Z"/></clipPath>
+            <clipPath id="clipD"><path d="M308 356C324 333 374 333 393 354 376 377 326 377 308 356Z"/></clipPath>
           </defs>
           <g clip-path="url(#clipE)">
-            <path fill="url(#gBranco)" d="M106 410C126 388 176 386 196 408 176 428 130 432 106 410Z"/>
-            <g class="pupila" data-cx="151" data-cy="409" transform="translate(151 412)"><circle r="15" fill="url(#gIris)"/><circle cx="-4" cy="-5" r="2.6" fill="#e9e3d6"/></g>
-            <path d="M106 410C126 388 176 386 196 408" fill="none" stroke="#000" stroke-width="7"/>
-            <g class="palpebra"><path fill="#b3a994" d="M96 330H206V376Q151 388 96 376Z"/><path d="M96 376Q151 388 206 376" fill="none" stroke="#000" stroke-width="6"/></g>
+            <path fill="url(#gBranco)" d="M149 357C163 334 208 332 224 354 206 376 166 378 149 357Z"/>
+            <g class="pupila" data-cx="185" data-cy="357" transform="translate(185 360)"><circle r="16" fill="url(#gIris)"/><circle cx="-4" cy="-5" r="2.6" fill="#e9e3d6"/></g>
+            <path d="M149 357C163 334 208 332 224 354" fill="none" stroke="#000" stroke-width="6"/>
+            <g class="palpebra"><path fill="#b3a994" d="M139 270H234V328Q186 340 139 328Z"/><path d="M139 328Q186 340 234 328" fill="none" stroke="#000" stroke-width="5"/></g>
           </g>
           <g clip-path="url(#clipD)">
-            <path fill="url(#gBranco)" d="M338 406C360 386 410 384 426 404 406 426 362 428 338 406Z"/>
-            <g class="pupila" data-cx="381" data-cy="406" transform="translate(381 409)"><circle r="15" fill="url(#gIris)"/><circle cx="-4" cy="-5" r="2.6" fill="#e9e3d6"/></g>
-            <path d="M338 406C360 386 410 384 426 404" fill="none" stroke="#000" stroke-width="7"/>
-            <g class="palpebra"><path fill="#b3a994" d="M328 326H436V372Q382 384 328 372Z"/><path d="M328 372Q382 384 436 372" fill="none" stroke="#000" stroke-width="6"/></g>
+            <path fill="url(#gBranco)" d="M308 356C324 333 374 333 393 354 376 377 326 377 308 356Z"/>
+            <g class="pupila" data-cx="351" data-cy="356" transform="translate(351 359)"><circle r="16" fill="url(#gIris)"/><circle cx="-4" cy="-5" r="2.6" fill="#e9e3d6"/></g>
+            <path d="M308 356C324 333 374 333 393 354" fill="none" stroke="#000" stroke-width="6"/>
+            <g class="palpebra"><path fill="#b3a994" d="M298 270H403V328Q351 340 298 328Z"/><path d="M298 328Q351 340 403 328" fill="none" stroke="#000" stroke-width="5"/></g>
           </g>
           <g id="boca"></g>
         </svg>
       </div>
+      <canvas class="chiado" id="chiado" width="135" height="183" aria-hidden="true"></canvas>
+      <p class="subliminar" id="subliminar" aria-hidden="true">EU SEI O QUE VOCÊ FEZ</p>
     </div>
     <p class="contador" aria-live="polite"><b id="contador">0</b><span id="contadorTxt">avistamentos registrados esta noite</span></p>
     <hr class="linha">
@@ -526,6 +549,16 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       const ng = ctx.createGain(); env(ng, t, .05, .4, 1.3); n.connect(bp); bp.connect(am); n.start(t);
       baque(t, .7);
     }
+    // chiado de TV fora de sintonia; só toca se o áudio já foi liberado por um toque
+    function chiado(seg) {
+      if (!ctx || ctx.state !== "running") return;
+      const t = ctx.currentTime;
+      const n = ruido(seg), bp = ctx.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 3200; bp.Q.value = .6;
+      const g = ctx.createGain(); g.gain.setValueAtTime(.0001, t);
+      for (let i = 0; i < seg * 25; i++) g.gain.setValueAtTime(.06 + Math.random() * .22, t + i / 25);
+      g.gain.setValueAtTime(.0001, t + seg);
+      n.connect(bp); bp.connect(g); saida(g, 1, .1); n.start(t); n.stop(t + seg);
+    }
     function clique() {
       if (!iniciar()) return;
       ctx.resume();
@@ -533,7 +566,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       let n; do n = nomes[Math.random() * nomes.length | 0]; while (n === ultimo);
       ultimo = n; sons[n]();
     }
-    return { clique, grito, trilha, rosnado };
+    return { clique, grito, trilha, rosnado, chiado };
   })();
   document.addEventListener("click", e => {
     if (e.target.closest("button:not(#trilha), .foto-alvo, .polaroid img")) Som.clique();
@@ -563,6 +596,45 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
     marcarTrilha(Som.trilha(trilhaQuer));
   });
 
+  // ---------- os dois rostos (coordenadas no espaço 540x730 das fotos) ----------
+  const ROSTOS = [
+    {
+      img: $("rostoImg"), mov: [24, 7], raio: 15, traco: [7, 6],
+      olhos: [
+        { d: "M106 410C126 388 176 386 196 408 176 428 130 432 106 410Z", topo: "M106 410C126 388 176 386 196 408", cx: 151, cy: 409,
+          palp: "M96 330H206V376Q151 388 96 376Z", linha: "M96 376Q151 388 206 376" },
+        { d: "M338 406C360 386 410 384 426 404 406 426 362 428 338 406Z", topo: "M338 406C360 386 410 384 426 404", cx: 381, cy: 406,
+          palp: "M328 326H436V372Q382 384 328 372Z", linha: "M328 372Q382 384 436 372" },
+      ],
+      boca: { cx: 270, x0: 132, x1: 408, cima: [596, .0013], baixo: [684, .0037], canino: [55, 85] },
+      susto: {
+        centro: [270, 430], olhos: [[151, 409, 46, 24], [381, 406, 44, 23]], lagrimaY: 418,
+        lagrimas: [[112, 12, 170], [132, 18, 290], [152, 11, 130], [172, 16, 240], [190, 9, 110],
+                   [344, 14, 250], [364, 19, 330], [386, 12, 150], [406, 15, 220], [422, 9, 120]],
+        boca: { cx: 270, x0: 128, x1: 412, cima: [598, .0013], baixo: [692, .0042], garganta: [635, 70], canino: [60, 90] },
+        gotas: [[150, 4, 70], [244, 7, 90], [300, 6, 60], [395, 5, 80]],
+      },
+    },
+    {
+      img: $("rostoImgB"), mov: [24, 8], raio: 20, traco: [7, 6],
+      olhos: [
+        { d: "M115.3 386.3C133 357.1 190.2 354.6 210.5 382.5 187.6 410.5 136.9 413 115.3 386.3Z", topo: "M115.3 386.3C133 357.1 190.2 354.6 210.5 382.5", cx: 161, cy: 386,
+          palp: "M105 280H221V352Q163 364 105 352Z", linha: "M105 352Q163 364 221 352" },
+        { d: "M317.1 385.1C337.4 355.9 400.9 355.9 425 382.5 403.4 411.7 339.9 411.7 317.1 385.1Z", topo: "M317.1 385.1C337.4 355.9 400.9 355.9 425 382.5", cx: 372, cy: 385,
+          palp: "M307 279H435V351Q371 363 307 351Z", linha: "M307 351Q371 363 435 351" },
+      ],
+      boca: { cx: 274, x0: 153, x1: 395, cima: [626, .00079], baixo: [696, .0039], canino: [48, 79] },
+      susto: {
+        centro: [274, 441], olhos: [[161, 386, 51, 27], [372, 385, 51, 27]], lagrimaY: 398,
+        lagrimas: [[117, 14, 200], [138, 20, 340], [161, 13, 150], [184, 19, 280], [204, 11, 130],
+                   [327, 17, 290], [350, 22, 380], [373, 14, 180], [396, 18, 250], [416, 11, 140]],
+        boca: { cx: 274, x0: 134, x1: 414, cima: [629, .00079], baixo: [714, .0038], garganta: [672, 70], canino: [57, 91] },
+        gotas: [[160, 5, 40], [241, 9, 45], [312, 8, 35], [388, 6, 40]],
+      },
+    },
+  ];
+  let rosto = ROSTOS[0];
+
   // ---------- olhos que seguem ----------
   const pupilas = [...document.querySelectorAll(".pupila")];
   const svgOlhos = document.querySelector(".olhos");
@@ -576,7 +648,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       const sx = box.left + cx * esc, sy = box.top + cy * esc;
       const dx = x - sx, dy = y - sy, dist = Math.hypot(dx, dy) || 1;
       const forca = Math.min(1, dist / (150 * esc + 60));
-      p.setAttribute("transform", `translate(${cx + dx / dist * 24 * forca} ${cy + dy / dist * 7 * forca})`);
+      p.setAttribute("transform", `translate(${cx + dx / dist * rosto.mov[0] * forca} ${cy + dy / dist * rosto.mov[1] * forca})`);
     });
   }
   addEventListener("pointermove", e => { alvo = [e.clientX, e.clientY]; ultimoMov = performance.now(); olhar(...alvo); }, { passive: true });
@@ -605,12 +677,14 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
   })();
 
   // ---------- boca que abre ao tocar no rosto ----------
-  (function montarBoca() {
+  function montarBoca(b) {
     const NS = "http://www.w3.org/2000/svg", boca = $("boca");
+    boca.replaceChildren();
     const add = (tag, attrs) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); boca.append(e); return e; };
-    const cx = 270, x0 = 132, x1 = 408;
-    const cima = x => 596 - .0013 * (x - cx) ** 2;
-    const baixo = x => 684 - .0037 * (x - cx) ** 2;
+    const { cx, x0, x1 } = b;
+    const cima = x => b.cima[0] - b.cima[1] * (x - cx) ** 2;
+    const baixo = x => b.baixo[0] - b.baixo[1] * (x - cx) ** 2;
+    boca.style.transformOrigin = `${cx}px ${b.cima[0]}px`;
     let d = `M${x0} ${cima(x0)}`;
     for (let x = x0; x <= x1; x += 6) d += `L${x} ${cima(x).toFixed(1)}`;
     for (let x = x1; x >= x0; x -= 6) d += `L${x} ${baixo(x).toFixed(1)}`;
@@ -626,7 +700,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
     });
     const pontas = [];
     for (let x = x0 + 16; x <= x1 - 12; x += 20) {
-      const prof = baixo(x) - cima(x), canino = Math.abs(x - cx) > 55 && Math.abs(x - cx) < 85;
+      const prof = baixo(x) - cima(x), canino = Math.abs(x - cx) > b.canino[0] && Math.abs(x - cx) < b.canino[1];
       const ponta = cima(x) + prof * (canino ? .8 : .5);
       dente(x, cima(x) - 2, ponta, canino ? 19 : 17);
       pontas.push([x, ponta]);
@@ -639,7 +713,66 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
     pontas.filter((_, i) => i % 3 === 1).forEach(([x, y], i) => gota(x, y - 4, 7, 40 + (i * 23) % 45, .1 + i * .12));
     [[x0 + 6, 9, 90, .2], [x1 - 6, 8, 70, .35], [cx - 30, 10, 110, .15], [cx + 24, 8, 85, .4]]
       .forEach(([x, l, c, a]) => gota(x, baixo(x) - 6, l, c, a));
-  })();
+  }
+
+  // ---------- troca de rosto a cada 7 s ----------
+  function aplicarRosto(r) {
+    rosto = r;
+    const grupos = svgOlhos.querySelectorAll("g[clip-path]");
+    const clips = [$("clipE"), $("clipD")].map(c => c.firstElementChild);
+    r.olhos.forEach((o, i) => {
+      const [branco, pupila, topo, palpebra] = grupos[i].children;
+      clips[i].setAttribute("d", o.d);
+      branco.setAttribute("d", o.d);
+      pupila.dataset.cx = o.cx; pupila.dataset.cy = o.cy;
+      pupila.setAttribute("transform", `translate(${o.cx} ${o.cy + 3})`);
+      pupila.firstElementChild.setAttribute("r", r.raio);
+      topo.setAttribute("d", o.topo); topo.setAttribute("stroke-width", r.traco[0]);
+      palpebra.children[0].setAttribute("d", o.palp);
+      palpebra.children[1].setAttribute("d", o.linha); palpebra.children[1].setAttribute("stroke-width", r.traco[1]);
+    });
+    montarBoca(r.boca);
+    alvo ? olhar(...alvo) : olharInicio();
+  }
+  // chiado de TV: ruído em baixa resolução, com uma faixa clara que rola pela tela
+  function chiar(ms) {
+    const c = $("chiado"), g = c.getContext("2d"), quadro = g.createImageData(c.width, c.height), d = quadro.data;
+    const fim = performance.now() + ms;
+    (function desenhar() {
+      const faixa = Math.random() * c.height | 0;
+      for (let y = 0; y < c.height; y++) {
+        const claro = Math.abs(y - faixa) < 7 ? 70 : 0, linha = y % 2 ? 0 : 25;
+        for (let x = 0; x < c.width; x++) {
+          const i = (y * c.width + x) * 4, v = Math.min(255, Math.random() * 190 + claro + linha) | 0;
+          d[i] = d[i + 1] = d[i + 2] = v; d[i + 3] = 255;
+        }
+      }
+      g.putImageData(quadro, 0, 0);
+      if (performance.now() < fim) requestAnimationFrame(desenhar);
+    })();
+  }
+  function trocarRosto() {
+    const w = $("rostoWrap");
+    if (document.hidden || w.classList.contains("boca-aberta") || !$("susto").hidden) return;
+    const prox = rosto === ROSTOS[0] ? ROSTOS[1] : ROSTOS[0];
+    w.classList.add("trocando");
+    chiar(700);
+    Som.chiado(.7);
+    // mensagem subliminar: dois lampejos rápidos no meio do chiado
+    [[220, 340], [480, 560]].forEach(([de, ate]) => {
+      setTimeout(() => w.classList.add("subliminando"), de);
+      setTimeout(() => w.classList.remove("subliminando"), ate);
+    });
+    ROSTOS.forEach(r => { r.img.classList.remove("entra", "sai"); void r.img.offsetWidth; });
+    prox.img.classList.add("entra");
+    rosto.img.classList.add("sai");
+    // os olhos somem durante a troca e voltam já no lugar do rosto novo
+    setTimeout(() => aplicarRosto(prox), 350);
+    setTimeout(() => w.classList.remove("trocando"), 750);
+  }
+  aplicarRosto(ROSTOS[0]);
+  setInterval(trocarRosto, 7000);
+
   let bocaTimer = null;
   function abrirBoca() {
     const w = $("rostoWrap");
@@ -652,14 +785,14 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
   $("rostoWrap").addEventListener("click", abrirBoca);
   $("rostoWrap").addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrirBoca(); } });
 
-  // ---------- rosto do susto (desenhado sobre o rosto original) ----------
-  const sustoPronto = new Promise(ok => {
-    const img = $("rostoImg");
-    const desenhar = () => { try { desenharSusto(img); } catch (e) { console.error(e); } ok(); };
-    img.complete ? desenhar() : img.addEventListener("load", desenhar, { once: true });
+  // ---------- rosto do susto (desenhado sobre o rosto que estiver na tela) ----------
+  const carregou = img => img.complete ? Promise.resolve() : new Promise(ok => {
+    img.addEventListener("load", ok, { once: true }); img.addEventListener("error", ok, { once: true });
   });
-  function desenharSusto(img) {
+  const sustoPronto = Promise.all(ROSTOS.map(r => carregou(r.img)));
+  function desenharSusto(img, s) {
     const c = $("sustoCanvas"), g = c.getContext("2d");
+    g.clearRect(0, 0, 540, 730);
     g.filter = "grayscale(1) contrast(1.7) brightness(.8)";
     g.drawImage(img, 0, 0, 540, 730);
     g.filter = "none";
@@ -667,12 +800,12 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
     g.globalCompositeOperation = "multiply";
     g.fillStyle = "#b8a99a"; g.fillRect(0, 0, 540, 730);
     g.globalCompositeOperation = "source-over";
-    const vin = g.createRadialGradient(270, 430, 120, 270, 430, 420);
+    const vin = g.createRadialGradient(s.centro[0], s.centro[1], 120, s.centro[0], s.centro[1], 420);
     vin.addColorStop(0, "rgba(0,0,0,0)"); vin.addColorStop(1, "rgba(0,0,0,.95)");
     g.fillStyle = vin; g.fillRect(0, 0, 540, 730);
 
     // olhos: buracos negros com brasa vermelha
-    [[151, 409, 46, 24], [381, 406, 44, 23]].forEach(([x, y, rx, ry]) => {
+    s.olhos.forEach(([x, y, rx, ry]) => {
       g.fillStyle = "#000"; g.beginPath(); g.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2); g.fill();
       const br = g.createRadialGradient(x, y + 2, 0, x, y + 2, 13);
       br.addColorStop(0, "#fff2c0"); br.addColorStop(.25, "#ff3a1a"); br.addColorStop(1, "rgba(120,0,0,0)");
@@ -694,25 +827,23 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       g.strokeStyle = "rgba(255,120,100,.35)"; g.lineWidth = 1.2;
       g.beginPath(); g.moveTo(x - larg * .15, y + 6); g.lineTo(x - larg * .15 + torto * .4, y + comp * .8); g.stroke();
     };
-    [[151, 409], [381, 406]].forEach(([x, y]) => {
+    s.olhos.forEach(([x, y]) => {
       const m = g.createRadialGradient(x, y + 22, 4, x, y + 22, 60);
       m.addColorStop(0, "rgba(130,0,0,.85)"); m.addColorStop(1, "rgba(90,0,0,0)");
       g.fillStyle = m; g.beginPath(); g.ellipse(x, y + 24, 58, 26, 0, 0, Math.PI * 2); g.fill();
     });
-    [[112, 12, 170], [132, 18, 290], [152, 11, 130], [172, 16, 240], [190, 9, 110],
-     [344, 14, 250], [364, 19, 330], [386, 12, 150], [406, 15, 220], [422, 9, 120]]
-      .forEach(([x, l, cp]) => escorrer(x, 418, l, cp));
+    s.lagrimas.forEach(([x, l, cp]) => escorrer(x, s.lagrimaY, l, cp));
 
     // boca aberta com dentes afiados
-    const cx = 270, x0 = 128, x1 = 412;
-    const cima = x => 598 - .0013 * (x - cx) ** 2;
-    const baixo = x => 692 - .0042 * (x - cx) ** 2;
+    const b = s.boca, { cx, x0, x1 } = b;
+    const cima = x => b.cima[0] - b.cima[1] * (x - cx) ** 2;
+    const baixo = x => b.baixo[0] - b.baixo[1] * (x - cx) ** 2;
     g.fillStyle = "#120000";
     g.beginPath(); g.moveTo(x0, cima(x0));
     for (let x = x0; x <= x1; x += 4) g.lineTo(x, cima(x));
     for (let x = x1; x >= x0; x -= 4) g.lineTo(x, baixo(x));
     g.closePath(); g.fill();
-    const garganta = g.createRadialGradient(cx, 635, 0, cx, 635, 70);
+    const garganta = g.createRadialGradient(cx, b.garganta[0], 0, cx, b.garganta[0], b.garganta[1]);
     garganta.addColorStop(0, "#4a0000"); garganta.addColorStop(1, "rgba(18,0,0,0)");
     g.fillStyle = garganta; g.fill();
     const dente = (x, base, ponta, larg) => {
@@ -723,7 +854,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       g.quadraticCurveTo(x + larg * .1, (base + ponta) / 2, x + larg / 2, base); g.closePath(); g.fill(); g.stroke();
     };
     for (let x = x0 + 16; x <= x1 - 12; x += 22) {
-      const prof = baixo(x) - cima(x), canino = Math.abs(x - cx) > 60 && Math.abs(x - cx) < 90;
+      const prof = baixo(x) - cima(x), canino = Math.abs(x - cx) > b.canino[0] && Math.abs(x - cx) < b.canino[1];
       dente(x, cima(x) - 2, cima(x) + prof * (canino ? .85 : .55), canino ? 20 : 18);
     }
     for (let x = x0 + 27; x <= x1 - 20; x += 22) {
@@ -731,10 +862,11 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
       dente(x, baixo(x) + 2, baixo(x) - prof * .45, 16);
     }
     // sangue no canto da boca e no queixo
-    [[150, 4, 70], [244, 7, 90], [300, 6, 60], [395, 5, 80]].forEach(([x, l, cp]) => escorrer(x, baixo(x) - 2, l, cp));
+    s.gotas.forEach(([x, l, cp]) => escorrer(x, baixo(x) - 2, l, cp));
   }
   async function assustar() {
     await sustoPronto;
+    try { desenharSusto(rosto.img, rosto.susto); } catch (e) { console.error(e); }
     const s = $("susto");
     s.classList.remove("sai"); s.hidden = false;
     Som.grito();
