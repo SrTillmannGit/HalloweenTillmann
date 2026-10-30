@@ -23,9 +23,10 @@ Sem chaves no `config.js`, o site roda em **modo teste** (só salva no próprio 
    o conteúdo de `supabase-setup.sql` e clique *Run*.
 2. Em *Project Settings → API*, copie a **Project URL** e a chave **anon public** para o `config.js`.
    A chave anon pode ficar pública: as regras do banco só permitem enviar e ver avistamentos.
-3. **Hospedagem:** no Netlify, *Add new site → Import an existing project → GitHub* e escolha este
-   repositório (sem comando de build, diretório de publicação = raiz). A cada push o site atualiza.
-4. Abra `https://<seu-site>.netlify.app/qr.html`, baixe o PNG e coloque no cartaz.
+3. **Hospedagem:** GitHub Pages (branch `main`, pasta raiz). A cada push o site atualiza em
+   https://tillmannmultilit.github.io/HalloweenTillmann/
+4. O QR Code pronto está em `qrcode-halloween.png` (também dá para gerar de novo em `qr.html`).
+   Coloque no cartaz.
 5. Teste escaneando com o celular e enviando uma foto antes de imprimir.
 
 ## Depois da festa

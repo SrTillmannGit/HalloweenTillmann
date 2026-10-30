@@ -27,13 +27,13 @@ button{padding:.8em 1.4em;background:var(--tinta);color:var(--papel);border:0;fo
   </label>
   <div id="qr"></div>
   <button id="baixar" type="button">Baixar PNG</button>
-  <p>Cole o endereço final, baixe o PNG e coloque no espaço em branco no rodapé do cartaz. Teste escaneando com o celular antes de imprimir.</p>
+  <p>O endereço do site já vem preenchido. Baixe o PNG e coloque no espaço em branco no rodapé do cartaz. Teste escaneando com o celular antes de imprimir.</p>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script>
+const SITE = "https://tillmannmultilit.github.io/HalloweenTillmann/";
 const alvo = document.getElementById("qr"), campo = document.getElementById("url");
-campo.value = location.protocol.startsWith("http") && !/localhost|127\.0\.0\.1/.test(location.host)
-  ? location.href.replace(/qr\.html.*$/, "") : "";
+campo.value = SITE;
 function gerar() {
   alvo.replaceChildren();
   new QRCode(alvo, { text: campo.value.trim() || "https://exemplo.com", width: 1024, height: 1024, correctLevel: QRCode.CorrectLevel.H });
@@ -41,7 +41,7 @@ function gerar() {
 campo.addEventListener("input", gerar);
 document.getElementById("baixar").addEventListener("click", () => {
   const c = alvo.querySelector("canvas"); if (!c) return;
-  const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = "qrcode-este-homem.png"; a.click();
+  const a = document.createElement("a"); a.href = c.toDataURL("image/png"); a.download = "qrcode-halloween.png"; a.click();
 });
 gerar();
 </script>
