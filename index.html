@@ -185,6 +185,43 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
   background:none;border:1px solid #555;color:var(--papel-claro);padding:.5em .9em;cursor:pointer;font:.8rem var(--f-texto);letter-spacing:.1em;text-transform:uppercase}
 .tela.entra figure{animation:entra .6s ease-out}
 @keyframes entra{0%{opacity:0;filter:blur(6px)}100%{opacity:1}}
+.filme{position:relative;line-height:0}
+
+/* telão: foto antiga e danificada, projetada num filme velho de terror */
+.tela.telao .filme{animation:projetor .9s steps(1) infinite,tranco 7s steps(1) infinite}
+.tela.telao .filme img{filter:grayscale(.5) sepia(.8) contrast(1.4) brightness(.78) blur(.35px)}
+/* manchas, dobra, cantos queimados e vinheta */
+.tela.telao .filme::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;mix-blend-mode:multiply;
+  background:
+    linear-gradient(112deg,transparent 47.6%,rgba(255,236,200,.5) 48%,rgba(0,0,0,.55) 48.5%,transparent 49%),
+    radial-gradient(circle at 14% 22%,rgba(70,35,10,.55),transparent 9%),
+    radial-gradient(circle at 78% 74%,rgba(90,45,10,.5),transparent 13%),
+    radial-gradient(ellipse 9% 6% at 60% 12%,rgba(110,60,20,.45),transparent),
+    radial-gradient(circle at 0 0,#000 0 5%,rgba(30,10,0,.95) 10%,rgba(130,65,15,.45) 15%,transparent 21%),
+    radial-gradient(circle at 100% 100%,#000 0 7%,rgba(30,10,0,.95) 12%,rgba(130,65,15,.45) 18%,transparent 25%),
+    radial-gradient(circle at 100% 0,#000 0 2%,rgba(30,10,0,.85) 6%,rgba(130,65,15,.35) 10%,transparent 14%),
+    radial-gradient(circle at 0 100%,rgba(30,10,0,.7) 0,transparent 10%),
+    radial-gradient(ellipse at center,transparent 45%,rgba(60,30,5,.55) 78%,rgba(0,0,0,.95) 100%)}
+/* riscos de película, poeira e granulação que mudam a cada quadro */
+.tela.telao .filme::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:2;mix-blend-mode:screen;opacity:.75;
+  background:
+    linear-gradient(90deg,transparent 21%,rgba(255,250,235,.55) 21.15%,transparent 21.35%),
+    linear-gradient(90deg,transparent 64%,rgba(255,250,235,.35) 64.1%,transparent 64.25%),
+    linear-gradient(90deg,transparent 83%,rgba(0,0,0,.6) 83.1%,transparent 83.3%),
+    radial-gradient(circle,rgba(255,250,235,.9) 0 1.5px,transparent 2.5px) 12% 30%/8px 8px no-repeat,
+    radial-gradient(circle,rgba(255,250,235,.8) 0 1px,transparent 2px) 70% 18%/6px 6px no-repeat,
+    radial-gradient(circle,rgba(0,0,0,.8) 0 2px,transparent 3px) 40% 75%/9px 9px no-repeat,
+    radial-gradient(ellipse,rgba(255,250,235,.7) 0 1px,transparent 2px) 88% 60%/14px 5px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 .95 0 0 0 0 .85 0 0 0 .55 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation:riscos .24s steps(1) infinite}
+@keyframes riscos{
+  0%{background-position:0 0,0 0,0 0,12% 30%,70% 18%,40% 75%,88% 60%,0 0}
+  25%{background-position:-38px 0,24px 0,-60px 0,63% 81%,22% 44%,9% 12%,51% 27%,-40px 25px}
+  50%{background-position:52px 0,-30px 0,18px 0,31% 9%,85% 66%,57% 38%,14% 90%,30px -50px}
+  75%{background-position:-14px 0,61px 0,-35px 0,78% 52%,6% 71%,93% 21%,36% 4%,-70px 10px}}
+@keyframes projetor{0%,100%{filter:brightness(1)}20%{filter:brightness(.82)}40%{filter:brightness(1.08)}55%{filter:brightness(.9)}80%{filter:brightness(1.02)}}
+@keyframes tranco{0%,100%{transform:none}93%{transform:translate(1px,-6px)}94%{transform:translate(-2px,4px)}95%{transform:none}}
+.tela.telao figcaption{color:#cbb894}
 
 /* ---------- susto ---------- */
 .susto{position:fixed;inset:0;z-index:100;background:#000;display:grid;place-items:center;overflow:hidden}
@@ -329,7 +366,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
 
 <div class="tela" id="tela" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
   <button class="fechar" type="button" id="fecharTela">Fechar</button>
-  <figure><img id="telaImg" alt=""><figcaption id="telaLegenda"></figcaption></figure>
+  <figure><div class="filme"><img id="telaImg" alt=""></div><figcaption id="telaLegenda"></figcaption></figure>
 </div>
 
 <button class="trilha" type="button" id="trilha" aria-pressed="false">
@@ -1020,7 +1057,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
     linha.forEach(l => leg.append(el("span", null, l), document.createElement("br")));
   }
   function abrir(i) { $("tela").hidden = false; mostrar(i); }
-  function fechar() { $("tela").hidden = true; clearInterval(timer); timer = null; document.exitFullscreen?.().catch(() => {}); }
+  function fechar() { $("tela").hidden = true; $("tela").classList.remove("telao"); clearInterval(timer); timer = null; document.exitFullscreen?.().catch(() => {}); }
   $("fecharTela").addEventListener("click", fechar);
   $("tela").addEventListener("click", e => { if (e.target === $("tela")) fechar(); });
   document.addEventListener("keydown", e => {
@@ -1032,6 +1069,7 @@ input::placeholder,textarea::placeholder{color:#4f4b44}
   $("abrirTelao").addEventListener("click", () => {
     if (!registros.length) { $("ficha").scrollIntoView({ behavior: "smooth" }); return; }
     document.documentElement.requestFullscreen?.().catch(() => {});
+    $("tela").classList.add("telao");
     abrir(registros.length - 1);
     clearInterval(timer);
     timer = setInterval(() => mostrar((idx - 1 + registros.length) % registros.length), 5000);
