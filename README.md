@@ -24,7 +24,7 @@ Sem chaves no `config.js`, o site roda em **modo teste** (só salva no próprio 
 2. Em *Project Settings → API*, copie a **Project URL** e a chave **anon public** para o `config.js`.
    A chave anon pode ficar pública: as regras do banco só permitem enviar e ver avistamentos.
 3. **Hospedagem:** GitHub Pages (branch `main`, pasta raiz). A cada push o site atualiza em
-   https://tillmannmultilit.github.io/HalloweenTillmann/
+   https://srtillmanngit.github.io/HalloweenTillmann/
 4. O QR Code pronto está em `qrcode-halloween.png` (também dá para gerar de novo em `qr.html`).
    Coloque no cartaz.
 5. Teste escaneando com o celular e enviando uma foto antes de imprimir.
